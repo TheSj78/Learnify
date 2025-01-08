@@ -1,0 +1,102 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.input {
+    width: 300px;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 25%;
+    max-width: 500px;
+    min-width: 200px;
+    height: 30px;
+}
+
+.checkbox-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+
+.check {
+    margin-right: 10px;
+}
+
+.notes-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: lavender;
+    transition: 2s;
+}
+
+.notes-container {
+    width: 53%;
+    border-radius: 10px;
+}
+
+.textarea {
+    width: 300px;
+    height: 260px;
+    padding: 10px;
+    font-size: 16px;
+    overflow: auto;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.file-input {
+    margin-top: 10px;
+}
+
+.search-button {
+    margin-top: 25px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #e0e0e0;
+}
+
+.file-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.custom-file-upload {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 10px;
+}
+
+.custom-file-upload:hover {
+    background-color: #e0e0e0;
+}
+
+#file-chosen {
+    font-size: 14px;
+    color: #555;
+}

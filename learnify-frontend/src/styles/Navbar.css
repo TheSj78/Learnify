@@ -1,0 +1,18 @@
+.nav {
+    background-color: #2d2e83c1;
+    margin: 0px;
+    display: flex;
+    height: 78px;
+}
+
+.nav h1 {
+    color: white;
+    font-size: 32px;
+    margin: 0px;
+    padding: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}

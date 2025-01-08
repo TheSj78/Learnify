@@ -1,0 +1,43 @@
+.practice-test-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input {
+    width: 80%;
+    max-width: 300px;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.generate-button, .back-button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #fff;
+}
+
+.generate-button {
+    background-color: #28a745;
+    margin-top: 20px;
+}
+
+.back-button {
+    background-color: #6c757d;
+}
+
+.loading {
+    font-size: 1.5rem;
+    color: #007bff;
+}
