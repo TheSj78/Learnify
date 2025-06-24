@@ -1,3 +1,4 @@
 learnify-backend/.env
 learnify-backend/node_modules
 learnify-frontend/node_modules
+.env
