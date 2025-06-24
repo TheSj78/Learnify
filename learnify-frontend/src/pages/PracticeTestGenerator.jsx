@@ -9,7 +9,7 @@ import "../styles/PracticeTest.css";
 const PracticeTestGenerator = () => {
     const [numQuestions, setNumQuestions] = useState("");
     const [loading, setLoading] = useState(false);
-    const [q, setQ] = useState([]);
+    const [questions, setQuestions] = useState([]);
     const [pdfUrl, setPdfUrl] = useState(null);
     const [error, setError] = useState(null);
     const location = useLocation();
@@ -22,7 +22,6 @@ const PracticeTestGenerator = () => {
         '√': 'sqrt',
         '∞': 'infinity',
         'Σ': 'sum',
-        // Add more symbols and their replacements as needed
     };
 
     function replaceSymbolsInString(str) {
@@ -34,7 +33,7 @@ const PracticeTestGenerator = () => {
             if (typeof obj[key] === 'string') {
                 obj[key] = replaceSymbolsInString(obj[key]);
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                replaceSymbolsInObject(obj[key]); // Recursively replace symbols in nested objects or arrays
+                replaceSymbolsInObject(obj[key]);
             }
         }
         return obj;
@@ -43,18 +42,16 @@ const PracticeTestGenerator = () => {
     function replaceSymbolsInArray(arr) {
         return arr.map(item => {
             if (typeof item === 'object' && item !== null) {
-                return replaceSymbolsInObject(item); // Process each object in the array
+                return replaceSymbolsInObject(item);
             } else if (typeof item === 'string') {
-                return replaceSymbolsInString(item); // Handle strings directly within the array
+                return replaceSymbolsInString(item);
             }
-            return item; // Return non-object, non-string items as is
+            return item;
         });
     }
 
     function ensureQuotesAroundValues(jsonStr) {
-        // Ensure all values are enclosed in double quotes
         return jsonStr.replace(/:\s*([^",\}\{\]\s]+)(\s*[,\}\]])/g, (match, p1, p2) => {
-            // Wrap the value in quotes if it doesn't already start with a quote
             if (!p1.startsWith('"')) {
                 p1 = `"${p1}"`;
             }
@@ -73,7 +70,7 @@ const PracticeTestGenerator = () => {
         }
 
         setLoading(true);
-        setError(null); // Reset the error state
+        setError(null);
 
         try {
             const formData = new FormData();
@@ -84,7 +81,6 @@ const PracticeTestGenerator = () => {
 
             var data = await generatePracticeTest(formData);
             console.log(data);
-            console.log("=====================================");
             console.log(typeof data);
 
             if (typeof data === "string") {
@@ -93,25 +89,14 @@ const PracticeTestGenerator = () => {
                     data = data.substring(0, data.length - 3);
                 }
 
-                console.log("!!!!!!!!")
-                console.log(data);
-                console.log("!!!!!!!!")
-
                 try {
                     data = JSON.parse(data);
                 } catch (error) {
                     data = ensureQuotesAroundValues(data);
-
-                    console.log("=====================================");
-                    console.log(data);
-                    console.log("=====================================");
-
                     try {
                         data = JSON.parse(data);
-                    }
-                    catch (e2) {
+                    } catch (e2) {
                         data = data.replace(/:\s*("?[^",\}\{]*"?)(\s*[,\}])/g, (match, p1, p2) => {
-                            // Only wrap the value in quotes if it isn't already properly enclosed
                             if (!/^".*"$/.test(p1)) {
                                 p1 = `"${p1}"`;
                             }
@@ -120,75 +105,132 @@ const PracticeTestGenerator = () => {
 
                         try {
                             data = JSON.parse(data);
-                        }
-                        catch (e3) {
+                        } catch (e3) {
                             console.error("Error parsing JSON:", e3);
                             setError("An error occurred while generating the practice test.");
+                            return;
                         }
                     }
                 }
             }
+            
             data = replaceSymbolsInArray(data);
-            setQ(data);
+            setQuestions(data);
 
             const pdfBlob = await pdf(<PracticeTestPDF questions={JSON.parse(JSON.stringify(data))} />).toBlob();
             const url = URL.createObjectURL(pdfBlob);
             setPdfUrl(url);
         } catch (error) {
             console.error("Error generating practice test:", error);
-            setError("An error occurred while generating the practice test.");
-            setQ([]);
+            setError("An error occurred while generating the practice test. Please try again.");
+            setQuestions([]);
             setPdfUrl(null);
         }
 
         setLoading(false);
     };
 
+    const handleDownload = () => {
+        if (pdfUrl) {
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = `${topic}-practice-test.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
     const handleBack = () => {
-        navigate(-1); // Navigate to the previous page
+        navigate(-1);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            handleGenerate();
+        }
     };
 
     return (
-        <div>
+        <div className="practice-test-page">
             <Navbar />
             <div className="practice-test-container">
                 {loading ? (
-                    <div className="loading">Loading...</div>
+                    <div className="loading">
+                        <div className="loading-text">Generating your practice test...</div>
+                        <div className="loading-subtext">This may take a few moments</div>
+                    </div>
                 ) : (
                     <>
                         {error ? (
-                            <div className="error">{error}</div>
-                        ) : q.length === 0 ? (
+                            <div className="error">
+                                <div className="error-icon">⚠️</div>
+                                <div className="error-title">Generation Failed</div>
+                                <div className="error-message">{error}</div>
+                            </div>
+                        ) : questions.length === 0 ? (
                             <>
-                                <h1>Generate Practice Test</h1>
-                                <input
-                                    type="number"
-                                    value={numQuestions}
-                                    onChange={(e) => setNumQuestions(e.target.value)}
-                                    placeholder="Number of questions"
-                                    className="input"
-                                    onKeyDown={(e) => {
-                                        e.key === "Enter" && handleGenerate();
-                                    }}
-                                />
-                                <button onClick={handleGenerate} className="generate-button">
-                                    Generate
-                                </button>
+                                <div className="practice-test-header">
+                                    <h1 className="practice-test-title">
+                                        Generate Practice Test
+                                    </h1>
+                                    <p className="practice-test-subtitle">
+                                        Create a comprehensive practice test for <strong>{topic}</strong>
+                                    </p>
+                                </div>
+
+                                <div className="generation-form">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="num-questions">
+                                            How many questions would you like? (1-50)
+                                        </label>
+                                        <input
+                                            id="num-questions"
+                                            type="number"
+                                            min="1"
+                                            max="50"
+                                            value={numQuestions}
+                                            onChange={(e) => setNumQuestions(e.target.value)}
+                                            onKeyDown={handleKeyPress}
+                                            placeholder="Enter number of questions"
+                                            className="number-input"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleGenerate}
+                                        className="generate-button"
+                                    >
+                                        Generate Practice Test
+                                    </button>
+                                </div>
                             </>
                         ) : (
-                            <>
+                            <div className="pdf-viewer-section">
+                                <div className="pdf-header">
+                                    <div className="pdf-title">
+                                        Your Practice Test
+                                    </div>
+                                    <div className="pdf-actions">
+                                        <button onClick={handleDownload} className="download-button">
+                                            Download PDF
+                                        </button>
+                                    </div>
+                                </div>
                                 {pdfUrl && (
                                     <iframe
                                         title="Practice Test"
                                         src={pdfUrl}
-                                        style={{ width: '100%', height: '70vh' }}
-                                    ></iframe>
+                                        className="pdf-viewer"
+                                    />
                                 )}
-                            </>
+                            </div>
                         )}
-                        <button onClick={handleBack} className="back-button">
-                            Back
-                        </button>
+                        
+                        <div className="back-section">
+                            <button onClick={handleBack} className="back-button">
+                                Back
+                            </button>
+                        </div>
                     </>
                 )}
             </div>

@@ -1,49 +1,65 @@
 import React, { useState } from "react";
-import "../styles/Flashcard.css";
+import "../styles/Flashcards.css";
 
 export default function Flashcard({ flashcard, index, total, onPrev, onNext }) {
     const [flipped, setFlipped] = useState(false);
-    const [className, setClassName] = useState("flashcard");
 
     const handleFlip = () => {
         setFlipped(!flipped);
-        flipped ? setClassName("flashcard") : setClassName("flashcard flipped");
     };
 
-    const goPrev = () => {
+    const handlePrev = () => {
         setFlipped(false);
-        setClassName("flashcard");
         onPrev();
-        //wait for 200ms before calling onPrev
-        // setTimeout(() => onPrev(), 500);
-        // onPrev();
-    }
+    };
 
-    const goNext = () => {
+    const handleNext = () => {
         setFlipped(false);
-        setClassName("flashcard");
         onNext();
-    }
+    };
 
     return (
         <div className="flashcard-container">
+            <div className="progress-indicator">
+                Card {index + 1} of {total}
+            </div>
+            
             <div
-                className={className}
+                className={`flashcard ${flipped ? 'flipped' : ''}`}
                 onClick={handleFlip}
             >
-                <div className="front">
-                    <h3>{flashcard.question}</h3>
-                </div>
-                <div className="back">
-                    <h3>{flashcard.answer}</h3>
+                <div className="flashcard-inner">
+                    <div className="flashcard-front">
+                        <div className="flashcard-content">
+                            {flashcard.question}
+                        </div>
+                    </div>
+                    <div className="flashcard-back">
+                        <div className="flashcard-content">
+                            {flashcard.answer}
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="navigation">
-                <button onClick={goPrev} disabled={index === 0}>
-                    &lt; Prev
+            
+            <div className="flip-hint">
+                Click the card to flip it
+            </div>
+            
+            <div className="flashcard-navigation">
+                <button 
+                    className="nav-button prev-button" 
+                    onClick={handlePrev} 
+                    disabled={index === 0}
+                >
+                    ← Previous
                 </button>
-                <button onClick={goNext} disabled={index === total - 1}>
-                    Next &gt;
+                <button 
+                    className="nav-button next-button" 
+                    onClick={handleNext} 
+                    disabled={index === total - 1}
+                >
+                    Next →
                 </button>
             </div>
         </div>

@@ -34,25 +34,7 @@ const Flashcards = () => {
             formData.append("numFlashcards", numFlashcards);
 
             var data = await generateFlashcards(formData);
-            /*
-            const data = [
-                {
-                    id: 1,
-                    question: "What is the derivative of x^n?",
-                    answer: "nx^(n-1)",
-                },
-                {
-                    id: 2,
-                    question: "What is the integral of x^n?",
-                    answer: "(x^(n+1))/(n+1) + C (where C is the constant of integration)",
-                },
-                {
-                    id: 3,
-                    question: "What is the chain rule for differentiation?",
-                    answer: "The derivative of f(g(x)) is f'(g(x)) * g'(x)",
-                },
-            ];
-            */
+            
             console.log(typeof data);
             console.log(data);
             if (typeof data === "string") {
@@ -65,7 +47,11 @@ const Flashcards = () => {
             setResults(data);
         } catch (error) {
             console.error("Error generating flashcards:", error);
-            setResults("An error occurred while generating flashcards.");
+            setResults([{
+                id: 1,
+                question: "Error generating flashcards",
+                answer: "Please try again or contact support if the issue persists."
+            }]);
         }
 
         setLoading(false);
@@ -78,7 +64,7 @@ const Flashcards = () => {
     };
 
     const handleBack = () => {
-        navigate(-1); // Navigate to the previous page
+        navigate(-1);
     };
 
     const handlePrev = () => {
@@ -93,40 +79,67 @@ const Flashcards = () => {
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            handleGenerate();
+        }
+    };
 
     return (
-        <div>
+        <div className="flashcards-page">
             <Navbar />
             <div className="flashcards-container">
                 {loading ? (
-                    <div className="loading">Loading...</div>
+                    <div className="loading">
+                        Generating your flashcards...
+                    </div>
                 ) : (
                     <>
                         {results.length === 0 ? (
                             <>
-                                <h1>Generate Flashcards</h1>
-                                <input
-                                    type="number"
-                                    value={numFlashcards}
-                                    onChange={(e) =>
-                                        setNumFlashcards(e.target.value)
-                                    }
-                                    placeholder="Number of flashcards"
-                                    className="input"
-                                    onKeyDown={(e) => {
-                                        e.key === "Enter" && handleGenerate();
-                                    }}
-                                />
-                                <button
-                                    onClick={handleGenerate}
-                                    className="generate-button"
-                                >
-                                    Generate
-                                </button>
+                                <div className="flashcards-header">
+                                    <h1 className="flashcards-title">
+                                        Generate Flashcards
+                                    </h1>
+                                    <p className="flashcards-subtitle">
+                                        Create interactive flashcards for <strong>{topic}</strong>
+                                    </p>
+                                </div>
+
+                                <div className="generation-form">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="num-flashcards">
+                                            How many flashcards would you like? (1-20)
+                                        </label>
+                                        <input
+                                            id="num-flashcards"
+                                            type="number"
+                                            min="1"
+                                            max="20"
+                                            value={numFlashcards}
+                                            onChange={(e) => setNumFlashcards(e.target.value)}
+                                            onKeyDown={handleKeyPress}
+                                            placeholder="Enter number of flashcards"
+                                            className="number-input"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleGenerate}
+                                        className="generate-button"
+                                    >
+                                        Generate Flashcards
+                                    </button>
+                                </div>
                             </>
                         ) : (
-                            <>
-                                <h3>Good luck!</h3>
+                            <div className="flashcard-study-section">
+                                <div className="study-header">
+                                    <h2 className="study-title">Study Time! 🎯</h2>
+                                    <p className="study-subtitle">
+                                        Review your flashcards for <strong>{topic}</strong>
+                                    </p>
+                                </div>
+
                                 <Flashcard
                                     flashcard={results[currentIndex]}
                                     index={currentIndex}
@@ -134,14 +147,17 @@ const Flashcards = () => {
                                     onPrev={handlePrev}
                                     onNext={handleNext}
                                 />
-                                <button onClick={handleRegenerate} className="regenerate-button">
-                                    Regenerate
-                                </button>
-                            </>
+
+                                <div className="action-buttons">
+                                    <button onClick={handleRegenerate} className="regenerate-button">
+                                        Generate New Set
+                                    </button>
+                                    <button onClick={handleBack} className="back-button">
+                                        Back
+                                    </button>
+                                </div>
+                            </div>
                         )}
-                        <button onClick={handleBack} className="back-button">
-                            Back
-                        </button>
                     </>
                 )}
             </div>

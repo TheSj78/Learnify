@@ -1,21 +1,21 @@
-.practice-test-page {
+.study-guide-page {
   min-height: calc(100vh - 80px);
   background: linear-gradient(135deg, var(--background) 0%, var(--background-secondary) 100%);
   padding: 2rem 0;
 }
 
-.practice-test-container {
+.study-guide-container {
   max-width: 900px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-.practice-test-header {
+.study-guide-header {
   text-align: center;
   margin-bottom: 3rem;
 }
 
-.practice-test-title {
+.study-guide-title {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -26,12 +26,12 @@
   gap: 0.75rem;
 }
 
-.practice-test-title::before {
-  content: '📝';
+.study-guide-title::before {
+  content: '📚';
   font-size: 3rem;
 }
 
-.practice-test-subtitle {
+.study-guide-subtitle {
   font-size: 1.125rem;
   color: var(--text-secondary);
 }
@@ -72,8 +72,8 @@
 }
 
 .number-input:focus {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 3px rgb(16 185 129 / 0.1);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgb(245 158 11 / 0.1);
 }
 
 .generate-button {
@@ -81,7 +81,7 @@
   padding: 1rem 2rem;
   font-size: 1.125rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-hover) 100%);
+  background: linear-gradient(135deg, var(--accent-color) 0%, #f59e0b 100%);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -137,7 +137,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: var(--secondary-color);
+  background-color: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-sm);
@@ -148,7 +148,7 @@
 }
 
 .download-button:hover {
-  background-color: var(--secondary-hover);
+  background-color: #f59e0b;
   transform: translateY(-1px);
 }
 
@@ -243,7 +243,7 @@
 }
 
 @media (max-width: 768px) {
-  .practice-test-title {
+  .study-guide-title {
     font-size: 2rem;
   }
   
@@ -263,11 +263,11 @@
 }
 
 @media (max-width: 480px) {
-  .practice-test-container {
+  .study-guide-container {
     padding: 0 0.75rem;
   }
   
-  .practice-test-title {
+  .study-guide-title {
     font-size: 1.75rem;
   }
   
